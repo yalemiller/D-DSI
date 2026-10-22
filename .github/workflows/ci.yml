@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  host:
+    name: Unit tests and lint (host gcc)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tool versions
+        run: gcc --version | head -1 && make --version | head -1
+
+      - name: Unit tests (gcc -std=c11, ASan + UBSan, -Werror)
+        run: make -C tests test
+
+      - name: Lint (cppcheck)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq cppcheck
+          cppcheck --version
+          cppcheck --error-exitcode=1 --enable=warning,performance,portability --inline-suppr --quiet \
+            -I source -I assets --suppress=missingIncludeSystem source/core source/gfx
