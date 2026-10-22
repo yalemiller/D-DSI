@@ -7,7 +7,7 @@ on:
 
 jobs:
   host:
-    name: Unit tests and lint (host gcc)
+    name: Unit tests, lint and screenshots (host gcc)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -23,4 +23,41 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq cppcheck
           cppcheck --version
           cppcheck --error-exitcode=1 --enable=warning,performance,portability --inline-suppr --quiet \
-            -I source -I assets --suppress=missingIncludeSystem source/core source/gfx
+            -I source -I assets --suppress=missingIncludeSystem source/core source/gfx source/ui
+
+      - name: Screenshots
+        run: make -C tests shots
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: shots/
+          retention-days: 30
+
+  nds:
+    name: DS ROM (BlocksDS)
+    runs-on: ubuntu-24.04
+    container: skylyrac/blocksds:slim-v1.24.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tool versions
+        run: |
+          echo "BLOCKSDS=$BLOCKSDS"
+          "$WONDERFUL_TOOLCHAIN/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc" --version | head -1
+          make --version | head -1
+
+      - name: Build pocketsheet.nds
+        shell: bash
+        run: make 2>&1 | tee build.log
+
+      - name: ROM size
+        run: ls -l pocketsheet.nds
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pocketsheet-nds
+          path: |
+            pocketsheet.nds
+            build.log
+          retention-days: 30

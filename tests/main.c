@@ -41,6 +41,7 @@ static const struct {
 } SUITES[] = {
     { "text", test_text },       { "rules", test_rules },     { "save", test_save },       { "libraries", test_libraries },
     { "portrait", test_portrait }, { "storage", test_storage }, { "actions", test_actions },
+    { "ui", test_ui },
 };
 
 int main(void)
