@@ -1,0 +1,11 @@
+Pocket Sheet original assets: font5x7.png, font5x7.h, icons.png, icons.h, icon32.png, palette.txt.
+Created for this project. Released under CC0 1.0 Universal (public domain dedication):
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Rules terms (ability names, skill names, proficiency, advantage, death saves, spell slots) come from
+the System Reference Document 5.1 by Wizards of the Coast LLC, licensed under CC BY 4.0:
+https://creativecommons.org/licenses/by/4.0/legalcode
+Weapon mastery property names come from the System Reference Document 5.2 by Wizards of the Coast LLC, also CC BY 4.0.
+Skill, mastery and starter spell descriptions in the app are original short paraphrases.
+Portraits are supplied by the user and are not part of this project.
+No Nintendo or Wizards of the Coast artwork, logos, fonts or sounds are used. v0.1 has no sounds.

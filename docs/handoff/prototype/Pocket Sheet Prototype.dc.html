@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#121016;color:#e8e2d6;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#f8b840}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div style="min-height:100vh;padding:24px;box-sizing:border-box;display:flex;flex-direction:column;gap:20px;">
+  <header style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;">
+    <h1 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Pocket Sheet</h1>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:#f8b840;color:#181020;padding:4px 8px;border-radius:3px;">Browser simulation · not the native DSi app</span>
+    <span style="font-size:13px;color:#a098a8;text-wrap:pretty;">Character sheet reference for DS-mode homebrew · v0.2 prototype</span>
+  </header>
+
+  <main style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;">
+    <div style="background:#2b2833;border-radius:22px;padding:18px 20px 22px;display:flex;flex-direction:column;align-items:center;box-shadow:inset 0 1px 0 #3d3947,0 24px 48px rgba(0,0,0,0.35);">
+      <div style="align-self:stretch;display:flex;justify-content:space-between;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;color:#8a8494;margin-bottom:6px;">
+        <span>TOP SCREEN · 256×192 · NO TOUCH</span><span>{{ scaleLabel }}</span>
+      </div>
+      <div style="background:#0b0a0e;padding:8px;border-radius:6px;">
+        <canvas ref="{{ topRef }}" width="256" height="192" style="display:block;width:{{ cw }}px;height:{{ chh }}px;image-rendering:pixelated;"></canvas>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin:14px 0;width:100%;">
+        <div style="flex:1;height:1px;background:#3d3947;"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.12em;color:#6f6a7a;">HINGE · PHYSICAL GAP</div>
+        <div style="flex:1;height:1px;background:#3d3947;"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:128px auto 128px;column-gap:16px;row-gap:10px;align-items:center;">
+        <div onPointerDown="{{ h.L.d }}" onPointerUp="{{ h.L.u }}" onPointerLeave="{{ h.L.u }}" onPointerCancel="{{ h.L.u }}" style="background:{{ kb.L }};color:{{ kf.L }};height:26px;border-radius:13px 4px 4px 4px;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;user-select:none;touch-action:none;">L<sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-size:9px;font-weight:400;opacity:0.7;">Q</span></sc-if></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;color:#8a8494;text-align:center;">BOTTOM SCREEN · 256×192 · TOUCH</div>
+        <div onPointerDown="{{ h.R.d }}" onPointerUp="{{ h.R.u }}" onPointerLeave="{{ h.R.u }}" onPointerCancel="{{ h.R.u }}" style="background:{{ kb.R }};color:{{ kf.R }};height:26px;border-radius:4px 13px 4px 4px;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;user-select:none;touch-action:none;">R<sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-size:9px;font-weight:400;opacity:0.7;">W</span></sc-if></div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="display:grid;grid-template-columns:repeat(3,38px);grid-template-rows:repeat(3,38px);gap:2px;">
+            <div style="grid-column:2;grid-row:1;background:{{ kb.UP }};color:{{ kf.UP }};border-radius:5px 5px 0 0;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.UP.d }}" onPointerUp="{{ h.UP.u }}" onPointerLeave="{{ h.UP.u }}" onPointerCancel="{{ h.UP.u }}">▲</div>
+            <div style="grid-column:1;grid-row:2;background:{{ kb.LEFT }};color:{{ kf.LEFT }};border-radius:5px 0 0 5px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.LEFT.d }}" onPointerUp="{{ h.LEFT.u }}" onPointerLeave="{{ h.LEFT.u }}" onPointerCancel="{{ h.LEFT.u }}">◀</div>
+            <div style="grid-column:2;grid-row:2;background:#3a3644;"></div>
+            <div style="grid-column:3;grid-row:2;background:{{ kb.RIGHT }};color:{{ kf.RIGHT }};border-radius:0 5px 5px 0;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.RIGHT.d }}" onPointerUp="{{ h.RIGHT.u }}" onPointerLeave="{{ h.RIGHT.u }}" onPointerCancel="{{ h.RIGHT.u }}">▶</div>
+            <div style="grid-column:2;grid-row:3;background:{{ kb.DOWN }};color:{{ kf.DOWN }};border-radius:0 0 5px 5px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.DOWN.d }}" onPointerUp="{{ h.DOWN.u }}" onPointerLeave="{{ h.DOWN.u }}" onPointerCancel="{{ h.DOWN.u }}">▼</div>
+          </div>
+          <sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8a8494;">arrow keys</span></sc-if>
+        </div>
+
+        <div style="background:#0b0a0e;padding:8px;border-radius:6px;">
+          <canvas ref="{{ botRef }}" width="256" height="192" onPointerDown="{{ onBotDown }}" onPointerMove="{{ onBotMove }}" onPointerUp="{{ onBotUp }}" onPointerCancel="{{ onBotCancel }}" style="display:block;width:{{ cw }}px;height:{{ chh }}px;image-rendering:pixelated;touch-action:none;cursor:crosshair;"></canvas>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+          <div style="display:grid;grid-template-columns:repeat(3,38px);grid-template-rows:repeat(3,38px);">
+            <div style="grid-column:2;grid-row:1;background:{{ kb.X }};color:{{ kf.X }};border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;line-height:1;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.X.d }}" onPointerUp="{{ h.X.u }}" onPointerLeave="{{ h.X.u }}" onPointerCancel="{{ h.X.u }}">X<sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-size:8px;font-weight:400;opacity:0.7;">S</span></sc-if></div>
+            <div style="grid-column:1;grid-row:2;background:{{ kb.Y }};color:{{ kf.Y }};border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;line-height:1;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.Y.d }}" onPointerUp="{{ h.Y.u }}" onPointerLeave="{{ h.Y.u }}" onPointerCancel="{{ h.Y.u }}">Y<sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-size:8px;font-weight:400;opacity:0.7;">A</span></sc-if></div>
+            <div style="grid-column:3;grid-row:2;background:{{ kb.A }};color:{{ kf.A }};border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;line-height:1;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.A.d }}" onPointerUp="{{ h.A.u }}" onPointerLeave="{{ h.A.u }}" onPointerCancel="{{ h.A.u }}">A<sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-size:8px;font-weight:400;opacity:0.7;">X</span></sc-if></div>
+            <div style="grid-column:2;grid-row:3;background:{{ kb.B }};color:{{ kf.B }};border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;line-height:1;cursor:pointer;user-select:none;touch-action:none;" onPointerDown="{{ h.B.d }}" onPointerUp="{{ h.B.u }}" onPointerLeave="{{ h.B.u }}" onPointerCancel="{{ h.B.u }}">B<sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-size:8px;font-weight:400;opacity:0.7;">Z</span></sc-if></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+              <div onPointerDown="{{ h.SELECT.d }}" onPointerUp="{{ h.SELECT.u }}" onPointerLeave="{{ h.SELECT.u }}" onPointerCancel="{{ h.SELECT.u }}" style="background:{{ kb.SELECT }};color:{{ kf.SELECT }};width:56px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.06em;cursor:pointer;user-select:none;touch-action:none;">SELECT</div>
+              <sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8a8494;">shift</span></sc-if>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+              <div onPointerDown="{{ h.START.d }}" onPointerUp="{{ h.START.u }}" onPointerLeave="{{ h.START.u }}" onPointerCancel="{{ h.START.u }}" style="background:{{ kb.START }};color:{{ kf.START }};width:56px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.06em;cursor:pointer;user-select:none;touch-action:none;">START</div>
+              <sc-if value="{{ showHints }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8a8494;">enter</span></sc-if>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;color:{{ lidColor }};">{{ lidText }}</div>
+    </div>
+
+    <aside style="flex:1 1 320px;max-width:420px;display:flex;flex-direction:column;gap:16px;font-size:13px;line-height:1.5;">
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+        <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Color scheme</h2>
+        <sc-for list="{{ themes }}" as="t" hint-placeholder-count="5">
+          <button onClick="{{ t.on }}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:7px;padding:8px 10px;cursor:pointer;color:#e8e2d6;font-family:'IBM Plex Sans',sans-serif;">
+            <span style="display:flex;flex-shrink:0;border-radius:3px;overflow:hidden;">
+              <sc-for list="{{ t.sw }}" as="s" hint-placeholder-count="6"><span style="width:14px;height:22px;background:{{ s.c }};"></span></sc-for>
+            </span>
+            <span style="display:flex;flex-direction:column;min-width:0;">
+              <span style="font-size:13px;font-weight:600;">{{ t.label }}</span>
+              <span style="font-size:11px;color:#a098a8;">{{ t.desc }}</span>
+            </span>
+          </button>
+        </sc-for>
+        <div style="font-size:12px;color:#a098a8;text-wrap:pretty;">Every color is exact in the DS's 15-bit color space, so what you see here is what the console shows.</div>
+      </section>
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+        <h2 style="margin:0 0 2px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Status</h2>
+        <div style="display:flex;justify-content:space-between;gap:12px;"><span>Prototype demonstrated</span><span style="color:#58c068;font-family:'IBM Plex Mono',monospace;font-size:12px;">yes · browser only</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;"><span>Native source written</span><span style="color:#8a8494;font-family:'IBM Plex Mono',monospace;font-size:12px;">not yet</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;"><span>Native build successful</span><span style="color:#8a8494;font-family:'IBM Plex Mono',monospace;font-size:12px;">not yet</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;"><span>Emulator tested</span><span style="color:#8a8494;font-family:'IBM Plex Mono',monospace;font-size:12px;">not yet</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;"><span>Physical DSi tested</span><span style="color:#8a8494;font-family:'IBM Plex Mono',monospace;font-size:12px;">needs a flashcart</span></div>
+      </section>
+
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+        <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Simulated flashcart microSD</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <sc-for list="{{ modeBtns }}" as="m" hint-placeholder-count="3">
+            <button onClick="{{ m.on }}" style="background:{{ m.bg }};color:{{ m.fg }};border:0;border-radius:5px;padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;">{{ m.label }}</button>
+          </sc-for>
+        </div>
+        <div style="font-size:12px;color:#a098a8;text-wrap:pretty;">Takes effect on the next write and the next boot.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <sc-for list="{{ actions }}" as="a" hint-placeholder-count="5">
+            <button onClick="{{ a.on }}" style="background:#2b2833;color:#e8e2d6;border:1px solid #3d3947;border-radius:5px;padding:6px 10px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;cursor:pointer;" style-hover="background:#3a3644;">{{ a.label }}</button>
+          </sc-for>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#a098a8;">fat:/data/pocketsheet/</div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:12px;">
+          <sc-for list="{{ files }}" as="f" hint-placeholder-count="2">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 56px 80px;gap:8px;"><span>{{ f.name }}</span><span style="color:#8a8494;text-align:right;">{{ f.size }} B</span><span style="color:{{ f.col }};text-align:right;">{{ f.state }}</span></div>
+          </sc-for>
+          <sc-if value="{{ noFiles }}" hint-placeholder-val="{{ false }}"><span style="color:#8a8494;">no files yet</span></sc-if>
+        </div>
+        <div style="font-size:12px;color:#a098a8;">{{ sessionText }}</div>
+      </section>
+
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+        <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Portraits</h2>
+        <div style="font-size:12px;color:#a098a8;text-wrap:pretty;">On hardware you copy a 48×48 BMP (24-bit or 8-bit) to the microSD. Here, pick any image: it's center-cropped to 48×48, saved as a BMP on the simulated card, then shown at 15-bit color.</div>
+        <sc-for list="{{ portraits }}" as="p" hint-placeholder-count="3">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+            <div style="flex:1 1 160px;min-width:0;display:flex;flex-direction:column;">
+              <span style="font-size:12px;">{{ p.label }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ p.fcol }};">{{ p.file }}</span>
+            </div>
+            <label style="background:#2b2833;color:#e8e2d6;border:1px solid #3d3947;border-radius:5px;padding:5px 10px;font-size:12px;cursor:pointer;" style-hover="background:#3a3644;"><input type="file" accept="image/*" onChange="{{ p.onFile }}" style="display:none;">Choose image…</label>
+            <button onClick="{{ p.onRemove }}" style="background:transparent;color:#a098a8;border:1px solid #3d3947;border-radius:5px;padding:5px 10px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;cursor:pointer;">Remove</button>
+          </div>
+        </sc-for>
+      </section>
+
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+        <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Spell library file</h2>
+        <div style="font-size:12px;color:#a098a8;text-wrap:pretty;">The app ships with 41 starter spells. On hardware you add your own by editing <span style="font-family:'IBM Plex Mono',monospace;color:#e8e2d6;">spells.txt</span> on a PC. Here you can edit the simulated file, then reboot to load it.</div>
+        <textarea ref="{{ spellsRef }}" spellcheck="false" placeholder="Press 'Load file' to see spells.txt" style="width:100%;box-sizing:border-box;min-height:160px;resize:vertical;background:#121016;color:#e8e2d6;border:1px solid #3d3947;border-radius:6px;padding:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.45;"></textarea>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <button onClick="{{ loadSpells }}" style="background:#2b2833;color:#e8e2d6;border:1px solid #3d3947;border-radius:5px;padding:6px 10px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;cursor:pointer;">Load file</button>
+          <button onClick="{{ saveSpells }}" style="background:#f8b840;color:#181020;border:0;border-radius:5px;padding:6px 10px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">Save to SD + reboot</button>
+        </div>
+      </section>
+
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+        <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Preview scale</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <sc-for list="{{ scaleBtns }}" as="s" hint-placeholder-count="4">
+            <button onClick="{{ s.on }}" style="background:{{ s.bg }};color:{{ s.fg }};border:0;border-radius:5px;padding:6px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;">{{ s.label }}</button>
+          </sc-for>
+        </div>
+        <div style="font-size:12px;color:#a098a8;text-wrap:pretty;">Whole-number scaling only, so every pixel stays sharp. The DSi XL's real screens are bigger than 1× on most monitors.</div>
+      </section>
+
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+        <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Keyboard</h2>
+        <div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;font-size:12px;">
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">Arrows</span><span>D-pad · move focus (hold to repeat)</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">X</span><span>A · press / change / confirm</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">Z</span><span>B · back / cancel / clear amount / delete letter</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">S</span><span>X · add weapon / add spell · Edit: next page · Slots: set maximums</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">A</span><span>Y · prepare spell / toggle skill expertise</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">Q / W</span><span>L / R · previous / next tab</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">Enter</span><span>Start · menu (save, long rest, characters)</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">Shift</span><span>Select · jump to Edit and back</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#f8b840;">Mouse</span><span>Stylus · bottom screen only</span>
+        </div>
+      </section>
+
+      <section style="background:#1b1921;border:1px solid #2b2833;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;">
+        <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a098a8;">Simulated only</h2>
+        <div style="font-size:12px;color:#c8c2b6;text-wrap:pretty;">The SD card is browser storage. The lid switch, the boot delay, the dice randomness and the dimmed top screen behind dialogs (a brightness fade on hardware) are all stand-ins. Screens, layout, controls and save bytes match the native spec.</div>
+      </section>
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;torchlight&quot;,&quot;grimoire&quot;,&quot;elven&quot;,&quot;parchment&quot;,&quot;night&quot;],&quot;default&quot;:&quot;torchlight&quot;,&quot;tsType&quot;:&quot;'torchlight'|'grimoire'|'elven'|'parchment'|'night'&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;scale&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto'|'1'|'2'|'3'&quot;,&quot;section&quot;:&quot;Preview&quot;},&quot;showKeyHints&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Preview&quot;}}">
+const KEYS = ['A','B','X','Y','L','R','START','SELECT','UP','DOWN','LEFT','RIGHT'];
+const KM = { arrowup:'UP', arrowdown:'DOWN', arrowleft:'LEFT', arrowright:'RIGHT', x:'A', z:'B', s:'X', a:'Y', q:'L', w:'R', enter:'START', shift:'SELECT' };
+
+class Component extends DCLogic {
+  state = { held: {}, scale: null, status: null, vw: window.innerWidth, vh: window.innerHeight };
+  topRef = React.createRef();
+  spellsRef = React.createRef();
+  botRef = React.createRef();
+  h = Object.fromEntries(KEYS.map(k => [k, {
+    d: e => { e.preventDefault(); this.press(k, true); },
+    u: () => { if (this.state.held[k]) this.press(k, false); },
+  }]));
+
+  componentDidMount() {
+    import('./pocket-sheet-sim-v2.js').then(m => {
+      if (this.dead) return;
+      this.mod = m;
+      setTimeout(() => this.sim && this.sim.setTheme(this.theme()), 0);
+      this.sim = m.createSim(this.topRef.current, this.botRef.current);
+      this.poll = setInterval(() => {
+        const s = this.sim.status(), j = JSON.stringify(s);
+        if (j !== this.sj) { this.sj = j; this.setState({ status: s }); }
+      }, 250);
+    });
+    this.kd = e => this.onKey(e, true);
+    this.ku = e => this.onKey(e, false);
+    this.rs = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight });
+    this.bl = () => KEYS.forEach(k => this.state.held[k] && this.press(k, false));
+    window.addEventListener('keydown', this.kd);
+    window.addEventListener('keyup', this.ku);
+    window.addEventListener('resize', this.rs);
+    window.addEventListener('blur', this.bl);
+  }
+  componentWillUnmount() {
+    this.dead = true; clearInterval(this.poll); this.sim && this.sim.destroy();
+    window.removeEventListener('keydown', this.kd); window.removeEventListener('keyup', this.ku);
+    window.removeEventListener('resize', this.rs); window.removeEventListener('blur', this.bl);
+  }
+  onKey(e, down) {
+    const t = e.target && e.target.tagName;
+    if (t === 'INPUT' || t === 'TEXTAREA') return;
+    const k = KM[(e.key || '').toLowerCase()];
+    if (!k) return;
+    e.preventDefault();
+    if (e.repeat) return;
+    this.press(k, down);
+  }
+  press(k, down) {
+    this.sim && this.sim.key(k, down);
+    this.setState(s => ({ held: { ...s.held, [k]: down } }));
+  }
+  xy(e) {
+    const r = this.botRef.current.getBoundingClientRect();
+    return [Math.floor((e.clientX - r.left) / r.width * 256), Math.floor((e.clientY - r.top) / r.height * 192)];
+  }
+  onBotDown = e => {
+    e.preventDefault();
+    try { this.botRef.current.setPointerCapture(e.pointerId); } catch (_) {}
+    this.touching = true;
+    const [x, y] = this.xy(e);
+    this.sim && this.sim.touch('down', Math.max(0, Math.min(255, x)), Math.max(0, Math.min(191, y)));
+  };
+  onBotMove = e => {
+    if (!this.touching || !this.sim) return;
+    const [x, y] = this.xy(e);
+    if (x < 0 || y < 0 || x > 255 || y > 191) { this.touching = false; this.sim.touch('cancel'); return; }
+    this.sim.touch('move', x, y);
+  };
+  onBotUp = e => {
+    if (!this.touching || !this.sim) return;
+    this.touching = false;
+    const [x, y] = this.xy(e);
+    this.sim.touch('up', x, y);
+  };
+  onBotCancel = () => { if (this.touching && this.sim) this.sim.touch('cancel'); this.touching = false; };
+
+  async loadPortrait(i, e) {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!f || !this.sim || !this.mod) return;
+    try {
+      const bmp = await createImageBitmap(f);
+      const cv = document.createElement('canvas'); cv.width = cv.height = 48;
+      const c = cv.getContext('2d'), s = Math.min(bmp.width, bmp.height);
+      c.imageSmoothingQuality = 'high';
+      c.drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, 48, 48);
+      this.sim.putPortrait(i, this.mod.makeBMP24(c.getImageData(0, 0, 48, 48).data));
+      this.sj = null;
+    } catch (_) {}
+  }
+  theme() { return this.state.theme ?? this.props.theme ?? 'torchlight'; }
+  componentDidUpdate(pp) { if (pp.theme !== this.props.theme && this.state.theme == null && this.sim) this.sim.setTheme(this.theme()); }
+  scale() {
+    const p = this.state.scale ?? this.props.scale ?? 'auto';
+    if (p !== 'auto') return +p;
+    const { vw, vh } = this.state;
+    if (vw >= 1700 && vh >= 1250) return 3;
+    return vw >= 880 ? 2 : 1;
+  }
+
+  renderVals() {
+    const s = this.scale(), st = this.state.status, held = this.state.held;
+    const kb = {}, kf = {};
+    KEYS.forEach(k => { kb[k] = held[k] ? '#f8b840' : '#3a3644'; kf[k] = held[k] ? '#181020' : '#e8e2d6'; });
+    const mode = st ? st.mode : 'ok';
+    const sim = fn => () => { if (this.sim) { fn(this.sim); this.sj = null; } };
+    const modeBtns = [['ok', 'SD card OK'], ['missing', 'No SD card'], ['writefail', 'Writes fail']].map(([id, label]) => ({
+      label, bg: mode === id ? '#f8b840' : '#2b2833', fg: mode === id ? '#181020' : '#e8e2d6', on: sim(x => x.setStorage(id)),
+    }));
+    const lid = st && st.lid;
+    const actions = [
+      { label: lid ? 'Open lid' : 'Close lid', on: sim(x => x.setLid(!lid)) },
+      { label: 'Reboot app', on: sim(x => x.reboot()) },
+      { label: 'Damage save + reboot', on: sim(x => { x.corrupt('sav'); x.reboot(); }) },
+      { label: 'Damage save and backup + reboot', on: sim(x => { x.corrupt('both'); x.reboot(); }) },
+      { label: 'Erase SD data + reboot', on: sim(x => { x.erase(); x.reboot(); }) },
+    ];
+    const cur = this.state.scale ?? this.props.scale ?? 'auto';
+    const scaleBtns = ['auto', '1', '2', '3'].map(v => ({
+      label: v === 'auto' ? 'Auto' : v + '×', bg: String(cur) === v ? '#f8b840' : '#2b2833', fg: String(cur) === v ? '#181020' : '#e8e2d6',
+      on: () => this.setState({ scale: v }),
+    }));
+    const files = (st ? st.files : []).map(f => ({ ...f, col: String(f.state).startsWith('valid') ? '#58c068' : '#e04848' }));
+    const sessionText = !st ? 'Starting…' : st.view === 'boot' ? 'Booting…' : st.session === 'temp' ? 'Temporary session: nothing is being saved.' : st.dirty ? 'Unsaved changes in memory.' : 'Everything in memory is saved.';
+    const names = st && st.slots ? st.slots : [null, null, null];
+    const has = f => (st ? st.files : []).find(x => x.name === f);
+    const portraits = [0, 1, 2].map(i => {
+      const f = has(`portrait${i + 1}.bmp`);
+      return {
+        label: `Slot ${i + 1} · ${names[i] ? names[i].toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : 'empty'}`,
+        file: f ? `portrait${i + 1}.bmp · ${f.state}` : `portrait${i + 1}.bmp · none`,
+        fcol: f ? (f.state === 'valid' ? '#58c068' : '#e04848') : '#8a8494',
+        onFile: e => this.loadPortrait(i, e),
+        onRemove: sim(x => x.removePortrait(i)),
+      };
+    });
+    const TH = [
+      ['torchlight', 'Torchlight', 'Dungeon stone, amber flame, ember red', ['#181010', '#383028', '#f0e0c0', '#f0a830', '#d84830', '#7898d0']],
+      ['grimoire', 'Grimoire', 'Oxblood leather with gold leaf', ['#200810', '#501830', '#f8e8c8', '#e8c050', '#f06048', '#88a8e8']],
+      ['elven', 'Elven', 'Deep forest green and brass', ['#101810', '#283828', '#e8f0d0', '#d8b048', '#e06048', '#78b0e0']],
+      ['parchment', 'Parchment', 'Light: ink on vellum, oxblood accent', ['#e8d8b0', '#c8b080', '#281810', '#903010', '#a82818', '#284880']],
+      ['night', 'Night', 'The original violet scheme', ['#181020', '#383050', '#f8f0d8', '#f8b840', '#e04848', '#5890e8']],
+    ];
+    const curT = this.theme();
+    const themes = TH.map(([id, label, desc, sw]) => ({
+      label, desc, sw: sw.map(c => ({ c })), border: id === curT ? '#f8b840' : '#2b2833', bg: id === curT ? '#24212b' : 'transparent',
+      on: () => { this.setState({ theme: id }); this.sim && this.sim.setTheme(id); },
+    }));
+    return {
+      themes,
+      spellsRef: this.spellsRef,
+      loadSpells: () => { if (this.sim && this.spellsRef.current) this.spellsRef.current.value = this.sim.getSpellsTxt(); },
+      saveSpells: sim(x => { if (this.spellsRef.current) { x.putSpellsTxt(this.spellsRef.current.value); x.reboot(); } }),
+      portraits,
+      topRef: this.topRef, botRef: this.botRef, cw: 256 * s, chh: 192 * s, scaleLabel: s + '× INTEGER SCALE',
+      h: this.h, kb, kf, showHints: this.props.showKeyHints ?? true,
+      onBotDown: this.onBotDown, onBotMove: this.onBotMove, onBotUp: this.onBotUp, onBotCancel: this.onBotCancel,
+      modeBtns, actions, scaleBtns, files, noFiles: files.length === 0, sessionText,
+      lidText: lid ? 'LID CLOSED · SLEEPING (SIMULATED)' : 'LID OPEN', lidColor: lid ? '#f8b840' : '#6f6a7a',
+    };
+  }
+}
+</script>
+</body>
+</html>

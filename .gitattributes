@@ -1,0 +1,9 @@
+# Source and docs use LF everywhere so diffs and the CI build match.
+* text=auto eol=lf
+
+# The SD card files ship with CRLF (they're edited in Notepad on a PC); keep their bytes exactly.
+sd-card/** -text
+
+*.png binary
+*.bmp binary
+*.nds binary

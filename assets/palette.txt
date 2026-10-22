@@ -1,0 +1,13 @@
+Pocket Sheet palette. Every channel is a multiple of 8, so each color maps exactly to DS RGB555 (RGB15(r>>3, g>>3, b>>3)).
+index name    hex      RGB15
+0     bg      #181020  RGB15(3,2,4)
+1     panel   #282038  RGB15(5,4,7)
+2     panel2  #383050  RGB15(7,6,10)
+3     line    #504868  RGB15(10,9,13)
+4     text    #F8F0D8  RGB15(31,30,27)
+5     dim     #A098A8  RGB15(20,19,21)
+6     gold    #F8B840  RGB15(31,23,8)
+7     red     #E04848  RGB15(28,9,9)
+8     green   #58C068  RGB15(11,24,13)
+9     blue    #5890E8  RGB15(11,18,29)
+(ink = bg, used for text on gold/red/green/blue)

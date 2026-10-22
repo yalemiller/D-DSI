@@ -1,0 +1,9 @@
+# BlocksDS build output
+build/
+*.nds
+*.elf
+*.map
+
+# Host test and screenshot output
+tests/build/
+shots/

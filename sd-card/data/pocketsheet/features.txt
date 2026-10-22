@@ -1,0 +1,52 @@
+# POCKET SHEET FEATURE LIBRARY
+# Class features, feats, species traits, item properties and notes. Edit on a PC.
+# Entries here are added to the built-in list. One with the same name as a built-in entry replaces it.
+# Each entry starts with @NAME (up to 20 characters), then optional fields, then the description.
+# category: class, subclass, species, background, feat, item or other
+# uses: a number (1-20), PB (proficiency bonus) or an ability (STR, DEX, CON, INT, WIS, CHA). Leave out for no tracker.
+# reset: long, short, short1 (one use back per short rest, all on a long rest) or none (you reset it yourself)
+# tags: inspire (a long rest grants Heroic Inspiration)
+# Weapon properties: name an entry after a property (e.g. @REACH) and weapons with it show the text.
+
+# ---- Jedediah Graves (copied from his paper sheet) ----
+@FAMILIAR FRIEND
+category: feat
+You always have Find Familiar prepared. You can cast it without a slot or material components, and regain that use on a long rest. You can also cast it with your spell slots. Your familiar's HP max and current HP rise by twice your character level.
+
+When you make an ability check with a skill you are proficient in while your familiar is within 5 feet, you gain advantage. You can do this a number of times equal to your proficiency bonus per long rest.
+
+@BARREL
+category: item
+uses: 6
+reset: none
+Lucinda holds 6 shots. Reloading takes an action, or one attack. Spend a pip each shot. Y gives one back, RELOAD in the details refills it.
+
+@BLARING
+category: item
+The shot can be heard up to 100 feet away. You have disadvantage on stealth checks until the start of your next turn, and creatures in range have advantage on perception checks to find you.
+
+@FAN FIRE
+category: item
+Fire a number of times equal to your DEX modifier, with a cumulative -3 penalty on each attack. Your speed becomes 0. Only add your damage modifier to the first attack.
+
+@MISFIRE
+category: item
+If you roll a 1 on an attack roll, the weapon jams and can't be used until repaired. Use an action for a DC 15 DEX (Sleight of Hand) check to repair it, or spend 1 hour mending it to succeed automatically.
+
+If the check fails, the weapon is broken and must be mended at a specialist's shop for a quarter of the firearm's cost.
+
+@LANGUAGES
+category: other
+Common, Elvish, Celestial, Thieves' Cant.
+
+@TOOLS
+category: other
+Thieves' Tools.
+
+@REACH
+category: item
+This weapon adds 5 feet to your reach when you attack with it, and when you work out your reach for opportunity attacks.
+
+@FINESSE
+category: item
+Use your choice of STR or DEX for the attack and damage rolls. Pocket Sheet picks the higher modifier for the to-hit.

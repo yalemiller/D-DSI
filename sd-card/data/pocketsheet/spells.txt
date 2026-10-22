@@ -1,0 +1,31 @@
+# POCKET SHEET SPELL LIBRARY
+# Edit this file on a PC, then put the card back in the flashcart.
+# Spells here are added to the built-in starter list. One with the same name as a built-in spell replaces it.
+# Each spell starts with a line @NAME (up to 20 characters). Then optional fields, then the description.
+# Fields: level (C for cantrip, or 1-9, required), school, time, range, components, duration, tags (concentration ritual).
+# A blank line in the description starts a new paragraph. Use plain ASCII. Everything shows in capitals.
+#
+# Example (remove the # signs to use it):
+# @MY HOMEBREW BOLT
+# level: 2
+# school: evocation
+# time: 1 action
+# range: 90 ft
+# components: V, S
+# duration: instant
+# tags:
+# A crackling bolt hits one creature you can see for 3d6 lightning damage.
+
+# ---- Jedediah Graves ----
+@SILVERED SHELL
+level: 1
+school: transmutation
+time: 1 bonus action
+range: self
+components: V, S, M
+duration: 1 minute
+You touch a weapon and coat it in otherworldly bile. For the duration it becomes moongilded, and while you hold it, it deals an extra 1d4 force damage on a hit.
+
+Higher slots: the duration grows to 10 minutes with a 2nd level slot, 1 hour with 3rd, 8 hours with 4th and 24 hours with 5th or higher.
+
+Material: an empty phantasm shell.
