@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Pocket Sheet pixel compare</title>
+<style>
+  body { background: #222; color: #ddd; font: 12px monospace; margin: 8px; }
+  canvas { image-rendering: pixelated; border: 1px solid #555; margin: 2px; }
+  .row { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<!-- Pixel comparison of the native screens (CI screenshots) with the browser
+     prototype. Set up with tools/compare/prepare.mjs; see the README. -->
+<p><button id="run" disabled>Run all</button> The prototype and the native app run the same frames; each row should report 0 differing pixels.</p>
+<div class="row">
+  <div><div>prototype</div><canvas id="top" width="256" height="192"></canvas><br><canvas id="bot" width="256" height="192"></canvas></div>
+  <div><div>native (CI shot)</div><canvas id="mine" width="256" height="392"></canvas></div>
+  <div><div>diff (red = differs at RGB555)</div><canvas id="diff" width="256" height="392"></canvas></div>
+</div>
+<pre id="log"></pre>
+<script type="module">
+const log = s => { document.getElementById('log').textContent += s + '\n'; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+localStorage.removeItem('pocketsheet.sim.sd.v6');
+const m = await import('./pocket-sheet-sim-v2.js');
+const top = document.getElementById('top'), bot = document.getElementById('bot');
+// The prototype captures some colors (PROF_COL) when createSim runs, so switch the
+// shared palette to Night first with a throwaway instance.
+m.createSim(document.createElement('canvas'), document.createElement('canvas')).setTheme('night');
+const sim = m.createSim(top, bot);
+window.sim = sim;
+
+// Same frames as tests/drive.c: a press is one frame held, one released.
+function press(k) { sim.key(k, true); sim.tick(1); sim.key(k, false); sim.tick(1); }
+
+function loadPng(url) {
+  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url + '?t=' + Date.now(); });
+}
+
+async function compare(name, file) {
+  const img = await loadPng('shots/' + file);
+  const mc = document.getElementById('mine').getContext('2d');
+  mc.drawImage(img, 0, 0);
+  const mine = mc.getImageData(0, 0, 256, 392).data;
+  const t = top.getContext('2d').getImageData(0, 0, 256, 192).data;
+  const b = bot.getContext('2d').getImageData(0, 0, 256, 192).data;
+  const dc = document.getElementById('diff').getContext('2d');
+  const out = dc.createImageData(256, 392);
+  const res = { name, top: { n: 0, box: null }, bot: { n: 0, box: null } };
+  for (const [src, y0, key] of [[t, 0, 'top'], [b, 200, 'bot']]) {
+    for (let y = 0; y < 192; y++) for (let x = 0; x < 256; x++) {
+      const i = (y * 256 + x) * 4, j = ((y + y0) * 256 + x) * 4;
+      const same = (src[i] >> 3) === (mine[j] >> 3) && (src[i + 1] >> 3) === (mine[j + 1] >> 3) && (src[i + 2] >> 3) === (mine[j + 2] >> 3);
+      const g = (mine[j] + mine[j + 1] + mine[j + 2]) / 9;
+      out.data[j] = same ? g : 255; out.data[j + 1] = same ? g : 0; out.data[j + 2] = same ? g : 0; out.data[j + 3] = 255;
+      if (!same) {
+        const r = res[key]; r.n++;
+        r.box = r.box ? [Math.min(r.box[0], x), Math.min(r.box[1], y), Math.max(r.box[2], x), Math.max(r.box[3], y)] : [x, y, x, y];
+      }
+    }
+  }
+  dc.putImageData(out, 0, 0);
+  log(JSON.stringify(res));
+  return res;
+}
+
+const STEPS = [[null, 'cmp-select'], ['A', 'cmp-skills'], ['R', 'cmp-feats'], ['R', 'cmp-magic'], ['R', 'cmp-arms'],
+  ['R', 'cmp-fight'], ['R', 'cmp-edit-info'], ['X', 'cmp-edit-abilities'], ['X', 'cmp-edit-skills'], ['START', 'cmp-menu']];
+const files = await (await fetch('shots/index.json?t=' + Date.now())).json();
+window.results = [];
+window.step = async i => {
+  const [k, name] = STEPS[i];
+  if (k) press(k);
+  else sim.tick(52); // drive_boot()
+  sim.tick(120);
+  const r = await compare(name, files.find(f => f.includes(name)));
+  window.results[i] = r;
+  return r;
+};
+window.ready = true;
+const run = document.getElementById('run');
+run.disabled = false;
+run.onclick = async () => {
+  run.disabled = true;
+  for (let i = 0; i < STEPS.length; i++) await window.step(i);
+  const bad = window.results.filter(r => r.top.n || r.bot.n).length;
+  log(bad ? `${bad} screen(s) differ` : 'all screens match');
+};
+log('ready');
+</script>
+</body>
+</html>

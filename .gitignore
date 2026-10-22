@@ -7,3 +7,4 @@ build/
 # Host test and screenshot output
 tests/build/
 shots/
+tools/compare/www/

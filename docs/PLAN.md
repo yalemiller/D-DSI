@@ -52,4 +52,6 @@ Core modules:
 
 ## Status
 
-Tracked in the [README](../README.md#status), with each step reported separately.
+As of 2026-10-22, milestones 1–4 are written and pass every check in CI: unit and UI tests, cppcheck, and a warning-free ROM build. Ten screens are pixel-identical to the prototype. Milestone 5 (melonDS, then hardware) hasn't started.
+
+Each step is reported separately in the [README](../README.md#status).
