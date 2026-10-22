@@ -133,7 +133,7 @@ static void session(void)
     shot("maren");
     presses(K_R, 2);
     shot("maren-magic");
-    presses(K_R, 4); // FIGHT
+    presses(K_R, 2); // MAGIC -> ARMS -> FIGHT
     drive_tap(17, 78); // 7
     drive_tap(17, 78); // 77
     drive_tap(176, 56);
@@ -177,12 +177,36 @@ static void storage_states(void)
     shot("bad-portrait");
 }
 
+// Static screens for pixel comparison with the browser prototype (Night theme):
+// every step waits 120 frames so toasts and effects have ended.
+static void compare(void)
+{
+    drive_init(true);
+    drive_boot();
+    drive_wait(120);
+    shot("cmp-select");
+    static const struct {
+        int key;
+        const char *name;
+    } STEPS[] = {
+        { K_A, "cmp-skills" },        { K_R, "cmp-feats" },          { K_R, "cmp-magic" },
+        { K_R, "cmp-arms" },          { K_R, "cmp-fight" },          { K_R, "cmp-edit-info" },
+        { K_X, "cmp-edit-abilities" }, { K_X, "cmp-edit-skills" },   { K_START, "cmp-menu" },
+    };
+    for (size_t i = 0; i < sizeof STEPS / sizeof STEPS[0]; i++) {
+        drive_press(STEPS[i].key);
+        drive_wait(120);
+        shot(STEPS[i].name);
+    }
+}
+
 int main(int argc, char **argv)
 {
     outdir = argc > 1 ? argv[1] : "shots";
     mkdir(outdir, 0777);
     session();
     storage_states();
+    compare();
     printf("%d screenshots, %d failed\n", count, failures);
     return failures ? 1 : 0;
 }
