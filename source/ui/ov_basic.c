@@ -439,7 +439,7 @@ static void stepper_bot(Surface *s, const Ctx *cx)
 {
     (void)cx;
     const Overlay *o = ov_top();
-    char buf[32];
+    char buf[48];
     d_rect(s, 0, 0, SCREEN_W, 16, C_PANEL);
     d_text(s, o->step.title, 6, 5, C_GOLD, 1);
     snprintf(buf, sizeof buf, "%d", o->step.val);
@@ -453,7 +453,7 @@ static void stepper_top(Surface *s, const Ctx *cx)
     (void)cx;
     const Overlay *o = ov_top();
     const Character *k = ch();
-    char buf[64];
+    char buf[96];
     int v = o->step.val;
     if (o->step.field == SF_LEVEL)
         snprintf(buf, sizeof buf, "LEVEL %d " G_ARROW " %d   PROF %s " G_ARROW " %s", k->level, v, sg(rules_pb(k)),
@@ -668,7 +668,7 @@ static void kbd_top(Surface *s, const Ctx *cx)
 {
     (void)cx;
     const Overlay *o = ov_top();
-    char buf[16];
+    char buf[48];
     d_rect(s, 0, 0, SCREEN_W, SCREEN_H, C_BG);
     d_text(s, o->kbd.title, 8, 24, C_GOLD, 1);
     d_rect(s, 8, 52, 240, 30, C_PANEL);

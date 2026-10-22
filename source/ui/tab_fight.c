@@ -82,7 +82,7 @@ static void apply_damage(const Btn *b)
     fx_simple(FX_SHAKE, 12, C_NONE);
     fx_simple(FX_FLASH, 14, C_RED);
     fx_count(c.before, c.after);
-    char t[12];
+    char t[16];
     snprintf(t, sizeof t, "-%d", n);
     fx_float(t, C_RED);
     if (k->hp == 0) {
@@ -110,7 +110,7 @@ static void apply_heal(const Btn *b)
     HpChange c = act_heal(k, n);
     fx_simple(FX_FLASH, 14, C_GREEN);
     fx_count(c.before, c.after);
-    char t[12];
+    char t[16];
     snprintf(t, sizeof t, "+%d", c.after - c.before);
     fx_float(t, C_GREEN);
     fx_sparkle(36, 4, 54, 114, 38, C_GREEN);
@@ -135,7 +135,7 @@ static void apply_temp(const Btn *b)
     }
     if (act_temp_hp(k, n, &old)) {
         fx_simple(FX_FLASH, 14, C_BLUE);
-        char t[12];
+        char t[16];
         snprintf(t, sizeof t, "+%d", k->temp - old);
         fx_float(t, C_BLUE);
         toastf(C_BLUE, "A WARD OF %d TEMP HP SHIMMERS", k->temp);
@@ -235,7 +235,7 @@ static void fight_bot(Surface *s, const Ctx *cx)
 {
     (void)cx;
     const Character *k = ch();
-    char buf[32];
+    char buf[48];
     d_rect(s, 3, 19, 168, 22, C_PANEL);
     d_icon(s, k->hp == 0 ? IC_SKULL : IC_HEART, 7, 25, C_RED, C_PANEL, C_NONE, 1);
     snprintf(buf, sizeof buf, "%d/%d", k->hp, k->hpMax);

@@ -23,7 +23,7 @@ void spell_row_draw(Surface *s, const Btn *b, bool focus, bool press)
     const Spell *sp = spells_find(&A.lib, name);
     bool mine = b->b;
     int lv = sp ? sp->level : -1, h = b->h - 1, y = b->y + 4;
-    char badge[4];
+    char badge[12];
     d_rect(s, b->x, b->y, b->w, h, press ? C_PANEL2 : C_PANEL);
     d_rect(s, b->x + 2, b->y + 2, 11, 11, lv <= 0 ? C_LINE : C_PANEL2);
     snprintf(badge, sizeof badge, "%s", lv < 0 ? "?" : lv == 0 ? "C" : "");
@@ -64,7 +64,7 @@ static void slot_chip_draw(Surface *s, const Btn *b, bool focus, bool press)
 {
     const Character *k = ch();
     int l = b->a, m = k->slotMax[l], av = m - k->slotUsed[l];
-    char buf[4];
+    char buf[12];
     d_rect(s, b->x, b->y, b->w, b->h, press ? C_PANEL2 : C_PANEL);
     snprintf(buf, sizeof buf, "%d", l + 1);
     d_text_c(s, buf, b->x, b->w, b->y + 4, av ? C_TEXT : C_LINE, 1);

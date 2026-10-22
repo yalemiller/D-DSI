@@ -229,7 +229,7 @@ static void del_act(const Btn *b)
 static void editor_bot(Surface *s, const Ctx *cx)
 {
     (void)cx;
-    char buf[16];
+    char buf[32];
     d_rect(s, 0, 0, SCREEN_W, 16, C_PANEL);
     d_text(s, "EDIT WEAPON", 6, 5, C_GOLD, 1);
     snprintf(buf, sizeof buf, "%d OF %d", ov_top()->weapon.idx + 1, ch()->nWeapons);

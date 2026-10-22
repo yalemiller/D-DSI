@@ -102,7 +102,7 @@ static void srest_bot(Surface *s, const Ctx *cx)
     const Overlay *o = ov_top();
     const Character *k = ch();
     int left = k->level - k->hdUsed, con = rules_mod(k->ab[AB_CON]);
-    char buf[64];
+    char buf[96];
     d_rect(s, 0, 0, SCREEN_W, 16, C_PANEL);
     d_text(s, "SHORT REST", 6, 5, C_GOLD, 1);
     snprintf(buf, sizeof buf, "HIT DICE %d/%d  D%d", left, k->level, k->hitDie);
@@ -125,7 +125,7 @@ static void srest_top(Surface *s, const Ctx *cx)
     const Overlay *o = ov_top();
     const Character *k = ch();
     int after = k->hp + o->srest.hp < (int)k->hpMax ? k->hp + o->srest.hp : (int)k->hpMax;
-    char buf[64];
+    char buf[96];
     snprintf(buf, sizeof buf, "SHORT REST: %d HIT DICE   HP %d " G_ARROW " %d", o->srest.n, k->hp, after);
     top_sheet(s, buf, NULL);
 }

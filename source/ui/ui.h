@@ -202,7 +202,7 @@ typedef struct {
     uint8_t kind, col;
     int t, T, seed;
     int from, to;
-    char text[12];
+    char text[16];
     int16_t rect[4];
     char sub[64];
 } Fx;
@@ -378,7 +378,7 @@ typedef struct {
     char title[24];
     int icon;
     uint8_t col;
-    char tag[24];
+    char tag[40];
     uint8_t tagCol;
     char meta[96], meta2[96];
     const char *desc;

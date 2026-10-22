@@ -2,6 +2,7 @@
 // plan (repeat, touch fires once on release inside, a dialog cancels a press),
 // saving on leave and lid close, temp sessions never saving, startup states.
 #include "core/storage.h"
+#include "core/text.h"
 #include "drive.h"
 #include "test.h"
 #include "tests.h"

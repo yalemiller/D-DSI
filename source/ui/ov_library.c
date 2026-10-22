@@ -188,7 +188,7 @@ static void spell_bot(Surface *s, const Ctx *cx)
 {
     (void)cx;
     const Overlay *o = ov_top();
-    char buf[24];
+    char buf[48];
     d_rect(s, 0, 0, SCREEN_W, 16, C_PANEL);
     d_text(s, "SPELL", 6, 5, C_GOLD, 1);
     snprintf(buf, sizeof buf, "%d OF %d", o->spell.i + 1, o->spell.count);
@@ -392,7 +392,7 @@ void open_slotset(void)
 static void slotrow_draw(Surface *s, const Btn *b, bool focus, bool press)
 {
     int l = b->a, m = ch()->slotMax[l];
-    char buf[12];
+    char buf[16];
     d_rect(s, b->x, b->y, b->w, b->h, press ? C_PANEL2 : C_PANEL);
     d_text(s, ORD_NAMES[l], b->x + 5, b->y + 11, C_DIM, 1);
     snprintf(buf, sizeof buf, "MAX %d", m);
@@ -498,7 +498,7 @@ static void fpick_act(const Btn *b)
 static void fpick_bot(Surface *s, const Ctx *cx)
 {
     (void)cx;
-    char buf[32];
+    char buf[48];
     if (!nfpick) {
         d_rect(s, 3, 37, 250, 128, C_PANEL);
         d_text_c(s, "NOTHING IN THIS CATEGORY", 3, 250, 96, C_DIM, 1);

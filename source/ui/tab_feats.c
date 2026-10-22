@@ -40,7 +40,7 @@ static void spend_feat(const char *name, int delta)
 static void pips(Surface *s, int x, int y, int max, int used, uint8_t col)
 {
     if (max > 8) {
-        char buf[12];
+        char buf[24];
         snprintf(buf, sizeof buf, "%d/%d", max - used, max);
         d_text_r(s, buf, x, y, col, 1);
         return;
@@ -89,14 +89,15 @@ static void row_draw(Surface *s, const Btn *b, bool focus, bool press)
     d_rect(s, b->x, b->y, b->w, h, press ? C_PANEL2 : C_PANEL);
     d_rect(s, b->x, b->y, 2, h, feat_cat_color(cat));
     int max = features_max_uses(k, f);
-    char cnt[12] = "", name[FEAT_NAME_LEN + 2];
+    char cnt[24] = "", name[FEAT_NAME_LEN + 2];
     if (max)
         snprintf(cnt, sizeof cnt, "%d/%d", max - it->used, max);
     int room = (b->w - 8 - (cnt[0] ? d_tw(cnt, 1) + 4 : 0)) / 6;
-    if ((int)strlen(it->name) > room && room > 0)
-        snprintf(name, sizeof name, "%.*s.", room - 1, it->name);
-    else
-        snprintf(name, sizeof name, "%s", it->name);
+    text_copy(name, it->name, FEAT_NAME_LEN);
+    if ((int)strlen(name) > room && room > 0) { // "LONG NAM." like the prototype
+        name[room - 1] = '.';
+        name[room] = 0;
+    }
     d_text(s, name, b->x + 5, y, cat < 0 ? C_RED : C_TEXT, 1);
     if (cnt[0])
         d_text_r(s, cnt, b->x + b->w - 3, y, C_GOLD, 1);

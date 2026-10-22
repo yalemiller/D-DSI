@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "core/text.h"
 #include "ui.h"
 
 Btn *ctx_add(Ctx *cx, uint16_t id, int x, int y, int w, int h)
