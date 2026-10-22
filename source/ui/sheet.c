@@ -67,7 +67,7 @@ static bool peek_for(const Character *k, const Btn *b, Peek *out)
     int kind = BKIND(b->id), i = BINDEX(b->id);
     memset(out, 0, sizeof *out);
     if (A.tab == TAB_MAGIC && kind == B_SROW) {
-        int order[MAX_SPELLS];
+        int order[MAX_SPELLS] = { 0 };
         int n = my_spells(k, order);
         if (i >= n)
             return false;
@@ -76,7 +76,7 @@ static bool peek_for(const Character *k, const Btn *b, Peek *out)
         return true;
     }
     if (A.tab == TAB_FEATS && (kind == B_FROW || kind == B_FTRACK)) {
-        int order[MAX_FEATS], tracked[4], nt = 0;
+        int order[MAX_FEATS] = { 0 }, tracked[4], nt = 0;
         int n = my_feats(k, order);
         for (int j = 0; j < n && nt < 4; j++)
             if (features_max_uses(k, features_find(&A.flib, k->feats[order[j]].name)) > 0)

@@ -67,7 +67,7 @@ static void filter_act(const Btn *b)
 void open_spell(int i)
 {
     Overlay *o = ov_push(OV_SPELL);
-    int order[MAX_SPELLS];
+    int order[MAX_SPELLS] = { 0 };
     const Character *k = ch();
     o->spell.count = my_spells(k, order);
     for (int j = 0; j < o->spell.count; j++)
