@@ -25,7 +25,10 @@ void test_storage(void)
     lr = storage_load(&fs, &loaded);
     CHECK_INT(lr.kind, LOAD_OK);
     CHECK_INT(lr.last, 1);
-    CHECK(!memcmp(&loaded, &r, sizeof r));
+    static uint8_t a[SAVE_BYTES], b[SAVE_BYTES];
+    save_serialize(&loaded, 1, a);
+    save_serialize(&r, 1, b);
+    CHECK(!memcmp(a, b, SAVE_BYTES));
 
     // the second save keeps the previous file as sheet.bak
     r.slot[0].hp = 7;

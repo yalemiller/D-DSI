@@ -51,7 +51,7 @@ void demo_jedediah(Character *k)
     w->dmg = 3;
     w->die = 6;
     w->type = 1;
-    w->range[0] = 0;
+    memset(w->range, 0, sizeof w->range);
     w->mastery = MASTERY_VEX;
     text_copy(w->props, "BARREL 6, BLARING, FAN FIRE", WEAPON_PROPS_LEN);
 

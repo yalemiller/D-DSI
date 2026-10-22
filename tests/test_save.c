@@ -97,8 +97,13 @@ void test_save(void)
     CHECK(!migrated);
     CHECK_INT(last, 1);
     CHECK(out.used[0] && out.used[1] && !out.used[2]);
-    CHECK(!memcmp(&out.slot[0], &in.slot[0], sizeof in.slot[0]));
-    CHECK(!memcmp(&out.slot[1], &in.slot[1], sizeof in.slot[1]));
+    static uint8_t again[SAVE_BYTES]; // writing the parsed roster back gives the same bytes
+    save_serialize(&out, 1, again);
+    CHECK(!memcmp(again, file, SAVE_BYTES));
+    CHECK_STR(out.slot[0].name, "JEDEDIAH GRAVES");
+    CHECK_STR(out.slot[1].sub, "LIFE DOMAIN");
+    CHECK_STR(out.slot[0].weapons[1].range, "10 FT");
+    CHECK_STR(out.slot[0].weapons[0].range, "");
     CHECK_STR(out.slot[0].weapons[0].props, "BARREL 6, BLARING, FAN FIRE");
     CHECK_INT(out.slot[0].weapons[0].dmg, 3);
     CHECK_INT(out.slot[0].weapons[0].bonus, 2);
